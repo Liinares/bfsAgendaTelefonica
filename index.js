@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const logger = require('./loggerMiddleware')
+const unknownEndpoint = require('./unknownEndpointMiddleware')
 
 app.use(express.json())
 app.use(logger)
@@ -97,11 +98,7 @@ app.post('/api/persons', (request, response) => {
   response.status(201).json(newPerson)
 })
 
-app.use((request, response) => {
-  response.status(404).json({
-    error: 'Not found'
-  })
-})
+app.use(unknownEndpoint)
 
 const PORT = 3001
 
