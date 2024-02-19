@@ -74,8 +74,8 @@ app.post('/api/persons',(request, response) => {
   }
 
   persons = [...persons, newPerson ]
-
-  response.json(newPerson)
+  
+  response.status(201).json(newPerson)
 })
 
 const PORT = 3001
