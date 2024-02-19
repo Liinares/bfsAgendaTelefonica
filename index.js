@@ -58,6 +58,12 @@ app.delete('/api/persons/:id',(request, response) => {
 app.post('/api/persons',(request, response) => {
   const person = request.body;
 
+  if (!person || !person.name || !person.number) {
+    return response.status(400).json({
+      error: 'Person name or person number is missing'
+    })
+  }
+
   const ids = persons.map(person => person.id)
   const maxId = Math.max(...ids)
 
