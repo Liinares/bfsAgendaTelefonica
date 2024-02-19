@@ -4,34 +4,34 @@ const app = express()
 app.use(express.json())
 
 let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
+  {
+    id: 1,
+    name: 'Arto Hellas',
+    number: '040-123456'
+  },
+  {
+    id: 2,
+    name: 'Ada Lovelace',
+    number: '39-44-5323523'
+  },
+  {
+    id: 3,
+    name: 'Dan Abramov',
+    number: '12-43-234345'
+  },
+  {
+    id: 4,
+    name: 'Mary Poppendieck',
+    number: '39-23-6423122'
+  }
 ]
 
 app.get('/', (request, response) => {
-    response.send('<h1>Hello world!</h1>')
+  response.send('<h1>Hello world!</h1>')
 })
 
-app.get('/api/persons',(request, response) => {
-    response.json(persons)
+app.get('/api/persons', (request, response) => {
+  response.json(persons)
 })
 
 app.get('/info', (request, resposne) => {
@@ -41,31 +41,31 @@ app.get('/info', (request, resposne) => {
   resposne.send(res)
 })
 
-app.get('/api/persons/:id',(request, response) => {
-    const id = Number(request.params.id)
-    console.log("id: ", id)
-    const person = persons.find(person => person.id === id)
-    
-    if (person){
-        console.log("encontrado")
-        
-        response.send(person)
-    } else{
-        console.log("no encontrado")
+app.get('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  console.log('id: ', id)
+  const person = persons.find(person => person.id === id)
 
-        response.status(404).end()
-    }
+  if (person) {
+    console.log('encontrado')
+
+    response.send(person)
+  } else {
+    console.log('no encontrado')
+
+    response.status(404).end()
+  }
 })
 
-app.delete('/api/persons/:id',(request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)    
-        
-    response.status(204).end()
+app.delete('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  persons = persons.filter(person => person.id !== id)
+
+  response.status(204).end()
 })
 
-app.post('/api/persons',(request, response) => {
-  const person = request.body;
+app.post('/api/persons', (request, response) => {
+  const person = request.body
 
   if (!person || !person.name || !person.number) {
     return response.status(400).json({
@@ -90,7 +90,7 @@ app.post('/api/persons',(request, response) => {
     number: person.number
   }
 
-  persons = [...persons, newPerson ]
+  persons = [...persons, newPerson]
 
   response.status(201).json(newPerson)
 })
@@ -98,5 +98,5 @@ app.post('/api/persons',(request, response) => {
 const PORT = 3001
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-}) 
+  console.log(`Server running on port ${PORT}`)
+})
