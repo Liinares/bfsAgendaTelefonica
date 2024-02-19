@@ -34,6 +34,13 @@ app.get('/api/persons',(request, response) => {
     response.json(persons)
 })
 
+app.get('/info', (request, resposne) => {
+  const res = `<p>Phonebook has info for ${persons.length} persons</p>
+    <p> ${new Date()} </p>`
+
+  resposne.send(res)
+})
+
 app.get('/api/persons/:id',(request, response) => {
     const id = Number(request.params.id)
     console.log("id: ", id)
@@ -41,9 +48,11 @@ app.get('/api/persons/:id',(request, response) => {
     
     if (person){
         console.log("encontrado")
+        
         response.send(person)
     } else{
         console.log("no encontrado")
+
         response.status(404).end()
     }
 })
@@ -64,6 +73,14 @@ app.post('/api/persons',(request, response) => {
     })
   }
 
+  const existingPerson = persons.find(pers => pers.name === person.name)
+
+  if (existingPerson) {
+    return response.status(400).json({
+      error: 'Person name already exists'
+    })
+  }
+
   const ids = persons.map(person => person.id)
   const maxId = Math.max(...ids)
 
@@ -74,7 +91,7 @@ app.post('/api/persons',(request, response) => {
   }
 
   persons = [...persons, newPerson ]
-  
+
   response.status(201).json(newPerson)
 })
 
