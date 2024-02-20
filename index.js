@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const app = express()
 const unknownEndpoint = require('./unknownEndpointMiddleware')
 
+app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
 
