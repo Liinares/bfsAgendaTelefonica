@@ -1,8 +1,10 @@
 const express = require('express')
+const cors = require('cors')
 const morgan = require('morgan')
 const app = express()
 const unknownEndpoint = require('./unknownEndpointMiddleware')
 
+app.use(cors())
 app.use(express.json())
 
 app.use(morgan(function (tokens, req, res) {
