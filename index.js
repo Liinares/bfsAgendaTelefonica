@@ -1,10 +1,19 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
-const logger = require('./loggerMiddleware')
 const unknownEndpoint = require('./unknownEndpointMiddleware')
 
 app.use(express.json())
-app.use(logger)
+
+app.use(morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens['response-time'](req, res), 'ms',
+    'Body:', JSON.stringify(req.body)
+  ].join(' ')
+}))
 
 let persons = [
   {
