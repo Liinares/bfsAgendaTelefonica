@@ -2,18 +2,18 @@
 GET http://localhost:3001/api/persons
 
 ### GET ONE PERSON
-GET http://localhost:3001/api/persons/1
+GET http://localhost:3001/api/persons/65d71df9b6cfd8c2f137e53c
 
 ### DELETE ONE PERSON
-DELETE  http://localhost:3001/api/persons/1
+DELETE  http://localhost:3001/api/persons/65d71df9b6cfd8c2f137e53c
 
 ### POST request
 POST  http://localhost:3001/api/persons 
 Content-Type: application/json
 
 {
-	"name": "Miguel",
-    "number": "1234"
+	"name": "Manuel",
+    "number": "12435243534"
 }
 
 ### POST bad request
@@ -22,4 +22,13 @@ Content-Type: application/json
 
 {
 	"name": "Miguel"
+}
+
+### POST request
+PUT  http://localhost:3001/api/persons/65d873bce6a34f01580a0c91
+Content-Type: application/json
+
+{
+	"name": "Editado",
+    "number": "3124132"
 }

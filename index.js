@@ -5,7 +5,8 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 const app = express()
-const unknownEndpoint = require('./unknownEndpointMiddleware')
+const unknownEndpoint = require('./middleware/unknownEndpoint')
+const handleErrors = require('./middleware/handleErrors')
 
 app.use(express.static('build'))
 app.use(cors())
@@ -21,7 +22,7 @@ app.use(morgan(function (tokens, req, res) {
   ].join(' ')
 }))
 
-let persons = []
+const persons = []
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello world!</h1>')
@@ -41,27 +42,30 @@ app.get('/info', (request, resposne) => {
   resposne.send(res)
 })
 
-app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  console.log('id: ', id)
-  const person = persons.find(person => person.id === id)
+app.get('/api/persons/:id', (request, response, next) => {
+  const { id } = request.params
 
-  if (person) {
-    console.log('encontrado')
-
-    response.send(person)
-  } else {
-    console.log('no encontrado')
-
-    response.status(404).end()
-  }
+  Person.findById(id)
+    .then(person => {
+      if (person) {
+        console.log('encontrado')
+        response.send(person)
+      } else {
+        console.log('no encontrado')
+        response.status(404).end()
+      }
+    })
+    .catch(err => { next(err) })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
+app.delete('/api/persons/:id', (request, response, next) => {
+  const { id } = request.params
 
-  response.status(204).end()
+  Person.findByIdAndDelete(id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => { next(error) })
 })
 
 app.post('/api/persons', (request, response) => {
@@ -69,33 +73,47 @@ app.post('/api/persons', (request, response) => {
 
   if (!person || !person.name || !person.number) {
     return response.status(400).json({
-      error: 'Person name or person number is missing'
+      error: 'Person name or number is missing'
     })
   }
 
-  const existingPerson = persons.find(pers => pers.name === person.name)
+  const newPerson = new Person({
+    name: person.name,
+    number: person.number
+  })
 
-  if (existingPerson) {
-    return response.status(400).json({
-      error: 'Person name already exists'
+  newPerson.save()
+    .then(savedPerson => {
+      response.status(201).json(savedPerson)
     })
-  }
+    .catch(err => {
+      console.log(err)
+      response.status(400).json({
+        error: 'Error in database'
+      })
+    })
+})
 
-  const ids = persons.map(person => person.id)
-  const maxId = Math.max(...ids)
+app.put('/api/persons/:id', (request, response, next) => {
+  const { id } = request.params
+  const person = request.body
+
+  console.log(person)
 
   const newPerson = {
-    id: maxId + 1,
     name: person.name,
     number: person.number
   }
 
-  persons = [...persons, newPerson]
-
-  response.status(201).json(newPerson)
+  Person.findByIdAndUpdate(id, newPerson, { new: true })
+    .then(result => {
+      response.json(result)
+    })
+    .catch(error => { next(error) })
 })
 
 app.use(unknownEndpoint)
+app.use(handleErrors)
 
 const PORT = process.env.PORT || 3001
 
