@@ -68,14 +68,8 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => { next(error) })
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const person = request.body
-
-  if (!person || !person.name || !person.number) {
-    return response.status(400).json({
-      error: 'Person name or number is missing'
-    })
-  }
 
   const newPerson = new Person({
     name: person.name,
@@ -87,10 +81,7 @@ app.post('/api/persons', (request, response) => {
       response.status(201).json(savedPerson)
     })
     .catch(err => {
-      console.log(err)
-      response.status(400).json({
-        error: 'Error in database'
-      })
+      next(err)
     })
 })
 

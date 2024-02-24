@@ -1,8 +1,15 @@
 const { Schema, model } = require('mongoose')
 
 const personSchema = new Schema({
-  name: String,
-  number: String
+  name: {
+    type: String,
+    minLength: 3,
+    required: true
+  },
+  number: {
+    type: String,
+    required: true
+  }
 })
 
 personSchema.set('toJSON', {
