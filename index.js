@@ -96,7 +96,11 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: person.number
   }
 
-  Person.findByIdAndUpdate(id, newPerson, { new: true })
+  Person.findByIdAndUpdate(id, newPerson, {
+    new: true,
+    runValidators: true,
+    conext: 'query'
+  })
     .then(result => {
       response.json(result)
     })

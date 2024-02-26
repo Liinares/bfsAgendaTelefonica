@@ -12,8 +12,8 @@ POST  http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-	"name": "Manuel",
-    "number": "12435243534"
+	"name": "Pablo",
+    "number": "123-122313124"
 }
 
 ### POST bad request
@@ -25,10 +25,10 @@ Content-Type: application/json
 }
 
 ### POST request
-PUT  http://localhost:3001/api/persons/65d873bce6a34f01580a0c91
+PUT  http://localhost:3001/api/persons/65d85d4fdf9ca68317088f2e
 Content-Type: application/json
 
 {
-	"name": "Editado",
+	"name": "Mi",
     "number": "3124132"
 }
