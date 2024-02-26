@@ -4,11 +4,17 @@ const personSchema = new Schema({
   name: {
     type: String,
     minLength: 3,
-    required: true
+    required: [true, 'User name required']
   },
   number: {
     type: String,
-    required: true
+    required: [true, 'User phone number required'],
+    validate: {
+      validator: function (v) {
+        return /^\d{2,3}-\d+$/.test(v)
+      },
+      message: props => `${props.value} is not a valid phone number!`
+    }
   }
 })
 
