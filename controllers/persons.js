@@ -1,11 +1,10 @@
 const personsRouter = require('express').Router()
 const Person = require('../models/Person')
 
-personsRouter.get('/', (request, response) => {
-  Person.find({})
-    .then(notes => {
-      response.json(notes)
-    })
+personsRouter.get('/', async (request, response) => {
+  const notes = await Person.find({})
+
+  response.json(notes)
 })
 
 personsRouter.get('/:id', (request, response, next) => {
@@ -34,7 +33,7 @@ personsRouter.delete('/:id', (request, response, next) => {
     .catch(error => { next(error) })
 })
 
-personsRouter.post('/', (request, response, next) => {
+personsRouter.post('/', async (request, response, next) => {
   const person = request.body
 
   const newPerson = new Person({
@@ -42,13 +41,12 @@ personsRouter.post('/', (request, response, next) => {
     number: person.number
   })
 
-  newPerson.save()
-    .then(savedPerson => {
-      response.status(201).json(savedPerson)
-    })
-    .catch(err => {
-      next(err)
-    })
+  try {
+    const savedPerson = await newPerson.save()
+    response.status(201).json(savedPerson)
+  } catch (error) {
+    next(error)
+  }
 })
 
 personsRouter.put('/:id', (request, response, next) => {
