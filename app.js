@@ -6,6 +6,7 @@ const unknownEndpoint = require('./middleware/unknownEndpoint')
 const handleErrors = require('./middleware/handleErrors')
 const morganLogger = require('./middleware/morganLogger')
 const personsRouter = require('./controllers/persons')
+const blogRouter = require('./controllers/blogs')
 
 app.use(express.static('build'))
 app.use(cors())
@@ -17,6 +18,7 @@ app.get('/', (request, response) => {
 })
 
 app.use('/api/persons', personsRouter)
+app.use('/api/blogs', blogRouter)
 
 app.use(unknownEndpoint)
 app.use(handleErrors)
