@@ -74,6 +74,34 @@ test('a person can be deleted', async () => {
   expect(secondResponse.body).toHaveLength(initialPersons.length - 1)
 })
 
+test('delete with incorrect id returns 400 ', async () => {
+  const id = '2142'
+
+  await api
+    .delete(`/api/persons/${id}`)
+    .expect(400)
+})
+
+test('a person name and phone can be changed', async () => {
+  const { response: firstResponse } = await getAllNamesFromPersons()
+  const { body: persons } = firstResponse
+  const personToEdit = persons[0]
+
+  const editedPerson = {
+    name: 'Francho',
+    number: '12-111111'
+  }
+
+  await api
+    .put(`/api/persons/${personToEdit.id}`)
+    .send(editedPerson)
+    .expect(200)
+    .then(response => {
+      expect(response.body.name).toBe(editedPerson.name)
+      expect(response.body.number).toBe(editedPerson.number)
+    })
+})
+
 afterAll(() => {
   mongoose.connection.close()
   server.close()
