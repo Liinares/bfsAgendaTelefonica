@@ -1,6 +1,7 @@
 require('dotenv').config()
 require('./mongo')
 const Person = require('./models/Person')
+const config = require('./utils/config')
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
@@ -110,7 +111,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 app.use(unknownEndpoint)
 app.use(handleErrors)
 
-const PORT = process.env.PORT || 3001
+const PORT = config.PORT || 3001
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
