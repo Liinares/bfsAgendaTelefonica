@@ -61,6 +61,19 @@ test('a person without name cant be added', async () => {
     .expect('Content-Type', /application\/json/)
 }, 10000)
 
+test('a person can be deleted', async () => {
+  const { response: firstResponse } = await getAllNamesFromPersons()
+  const { body: persons } = firstResponse
+  const personToDelete = persons[0]
+
+  await api
+    .delete(`/api/persons/${personToDelete.id}`)
+    .expect(204)
+
+  const { response: secondResponse } = await getAllNamesFromPersons()
+  expect(secondResponse.body).toHaveLength(initialPersons.length - 1)
+})
+
 afterAll(() => {
   mongoose.connection.close()
   server.close()
