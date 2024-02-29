@@ -10,3 +10,13 @@ Content-Type: application/json
     "author": "Linares",
     "url": "url_of_blog"
 }
+
+### POST request
+PUT  http://localhost:3001/api/blogs/65df75da0dadb7e97dc9439a
+Content-Type: application/json
+
+{
+	"title": "EditedTitle",
+    "url": "editedUrl",
+    "likes": 123
+}

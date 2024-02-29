@@ -106,6 +106,53 @@ describe('POST blogs', () => {
   })
 })
 
+describe('DELETE blogs', () => {
+  test('a blog can be deleted', async () => {
+    const { response: firstResponse } = await getAllAuthorsFromBlogs()
+    const { body: blogs } = firstResponse
+    const personToDelete = blogs[0]
+
+    await api
+      .delete(`/api/blogs/${personToDelete.id}`)
+      .expect(204)
+
+    const { response: secondResponse } = await getAllAuthorsFromBlogs()
+    expect(secondResponse.body).toHaveLength(initialBlogs.length - 1)
+  })
+
+  test('delete with incorrect id returns 400 ', async () => {
+    const id = '2142'
+
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(400)
+  })
+})
+
+describe('PUT blogs', () => {
+  test('a blog title, name and likes can be changed', async () => {
+    const { response: firstResponse } = await getAllAuthorsFromBlogs()
+    const { body: blogs } = firstResponse
+    const blogToEdit = blogs[0]
+
+    const editedBlog = {
+      title: 'Edited title',
+      url: 'edited-url',
+      likes: 12
+    }
+
+    await api
+      .put(`/api/blogs/${blogToEdit.id}`)
+      .send(editedBlog)
+      .expect(200)
+      .then(response => {
+        expect(response.body.title).toBe(editedBlog.title)
+        expect(response.body.url).toBe(editedBlog.url)
+        expect(response.body.likes).toBe(editedBlog.likes)
+      })
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
