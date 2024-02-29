@@ -13,14 +13,14 @@ beforeEach(async () => {
 }, 10000)
 
 describe('GET person', () => {
-  test('notes are returned as json', async () => {
+  test('persons are returned as json', async () => {
     await api
       .get('/api/persons')
       .expect(200)
       .expect('Content-Type', /application\/json/)
   }, 10000)
 
-  test('there are two notes', async () => {
+  test('there are two persons', async () => {
     const response = await api.get('/api/persons')
     expect(response.body).toHaveLength(initialPersons.length)
   }, 10000)
