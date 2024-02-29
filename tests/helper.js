@@ -64,9 +64,21 @@ const getAllNamesFromPersons = async () => {
   }
 }
 
+const getAllAuthorsFromBlogs = async () => {
+  const response = await api.get('/api/blogs')
+
+  const authors = response.body.map(blog => blog.author)
+
+  return {
+    authors,
+    response
+  }
+}
+
 module.exports = {
   initialPersons,
+  initialBlogs,
   api,
   getAllNamesFromPersons,
-  initialBlogs
+  getAllAuthorsFromBlogs
 }
