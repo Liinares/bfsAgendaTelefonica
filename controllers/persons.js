@@ -23,14 +23,13 @@ personsRouter.get('/:id', (request, response, next) => {
     .catch(err => { next(err) })
 })
 
-personsRouter.delete('/:id', (request, response, next) => {
+personsRouter.delete('/:id', async (request, response, next) => {
   const { id } = request.params
 
-  Person.findByIdAndDelete(id)
-    .then(result => {
-      response.status(204).end()
-    })
-    .catch(error => { next(error) })
+  try {
+    await Person.findByIdAndDelete(id)
+    response.status(204).end()
+  } catch (error) { next(error) }
 })
 
 personsRouter.post('/', async (request, response, next) => {
