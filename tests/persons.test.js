@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const Person = require('../models/Person')
-const { server } = require('../index')
 const { initialPersons, api, getAllNamesFromPersons } = require('./helper')
 
 beforeEach(async () => {
@@ -111,5 +110,4 @@ describe('PUT person', () => {
 
 afterAll(() => {
   mongoose.connection.close()
-  server.close()
 })
