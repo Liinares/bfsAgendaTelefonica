@@ -8,7 +8,8 @@ beforeEach(async () => {
 
   const passwordHash = await bcrypt.hash('initialPassword', 10)
   const user = new User({
-    username: 'linaresmiguel26',
+    username: 'testUsername',
+    name: 'name',
     passwordHash
   })
 
@@ -37,6 +38,27 @@ describe('POST users', () => {
 
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
+  })
+
+  test('creation fails with proper statuscode and message if username is already taken', async () => {
+    const usersAtStart = await getUsers()
+
+    const newUser = {
+      username: 'testUsername',
+      name: 'newname',
+      password: 'passwordUsername'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('`username` to be unique')
+
+    const usersAtEnd = await getUsers()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
   })
 })
 
