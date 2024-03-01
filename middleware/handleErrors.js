@@ -1,4 +1,6 @@
 const handleErrors = (error, request, response, next) => {
+  console.log('HANDLE ERRORS')
+  console.log(error.name)
   console.log(error)
 
   if (error.name === 'CastError') {
