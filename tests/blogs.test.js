@@ -1,14 +1,27 @@
 const mongoose = require('mongoose')
 const Blog = require('../models/Blog')
-const { api, initialBlogs, getAllAuthorsFromBlogs } = require('./helper')
+const User = require('../models/User')
+const { api, initialBlogs, getAllAuthorsFromBlogs, getUsers, getInitialUsers } = require('./helper')
 
 beforeEach(async () => {
   await Blog.deleteMany({}) // delete all blogs in test database
+  await User.deleteMany({}) // delete all users in test database
 
   // Create an inital state of database
-  const blogObjects = initialBlogs.map(blog => new Blog(blog))
-  const promises = blogObjects.map(blog => blog.save())
-  await Promise.all(promises)
+  const initialUsers = await getInitialUsers()
+  const userObjects = initialUsers.map(user => new User(user))
+  const promisesUsers = userObjects.map(user => user.save())
+  await Promise.all(promisesUsers)
+
+  const users = await getUsers()
+
+  const blogsWithUserId = initialBlogs.map(blog => {
+    blog.userId = users[0].id
+    return blog
+  })
+  const blogObjects = blogsWithUserId.map(blog => new Blog(blog))
+  const promiseBlogs = blogObjects.map(blog => blog.save())
+  await Promise.all(promiseBlogs)
 }, 10000)
 
 describe('GET blogs', () => {
@@ -39,12 +52,17 @@ describe('GET blogs', () => {
 
 describe('POST blogs', () => {
   test('a valid blog can be created', async () => {
+    const users = await getUsers()
+
+    const userId = users[0].id
+
     const blogToCreate =
     {
       title: 'Blog to create',
       author: 'Miguel A Linares',
       url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-      likes: 13
+      likes: 13,
+      userId
     }
 
     await api
@@ -59,11 +77,16 @@ describe('POST blogs', () => {
   })
 
   test('a blog created whithout likes have 0 likes by default', async () => {
+    const users = await getUsers()
+
+    const userId = users[0].id
+
     const blogToCreate =
     {
       title: 'Blog to create without likes',
       author: 'Miguel A Linares',
-      url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll'
+      url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+      userId
     }
 
     await api
@@ -78,11 +101,16 @@ describe('POST blogs', () => {
   })
 
   test('a blog cant be created without title', async () => {
+    const users = await getUsers()
+
+    const userId = users[0].id
+
     const blogToCreate =
     {
       author: 'Miguel A Linares',
       url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-      likes: 12
+      likes: 12,
+      userId
     }
 
     await api
@@ -92,11 +120,16 @@ describe('POST blogs', () => {
   })
 
   test('a blog cant be created without url', async () => {
+    const users = await getUsers()
+
+    const userId = users[0].id
+
     const blogToCreate =
     {
       title: 'Blog to create',
       author: 'Miguel A Linares',
-      likes: 12
+      likes: 12,
+      userId
     }
 
     await api
