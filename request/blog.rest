@@ -6,13 +6,15 @@ POST  http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-	"title": "Title of blog",
-    "author": "Linares",
-    "url": "url_of_blog"
+	"title": "Title of blog 2",
+    "author": "Fernando Alonso",
+    "url": "url_of_blog2",
+    "likes": 4,
+    "userId": "65e37e1bcbfffbf0dc46e8b1"
 }
 
 ### POST request
-PUT  http://localhost:3001/api/blogs/65df75da0dadb7e97dc9439a
+PUT  http://localhost:3001/api/blogs/dasfgcdasfc
 Content-Type: application/json
 
 {
