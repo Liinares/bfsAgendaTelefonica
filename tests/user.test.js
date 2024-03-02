@@ -1,19 +1,14 @@
 const mongoose = require('mongoose')
 const User = require('../models/User')
-const { api, getUsers } = require('./helper')
-const bcrypt = require('bcrypt')
+const { api, getUsers, getInitialUsers } = require('./helper')
 
 beforeEach(async () => {
   await User.deleteMany({}) // delete all users in test database
 
-  const passwordHash = await bcrypt.hash('initialPassword', 10)
-  const user = new User({
-    username: 'testUsername',
-    name: 'name',
-    passwordHash
-  })
-
-  await user.save()
+  const initialUsers = await getInitialUsers()
+  const userObjects = initialUsers.map(user => new User(user))
+  const promisesUsers = userObjects.map(user => user.save())
+  await Promise.all(promisesUsers)
 }, 10000)
 
 describe('POST users', () => {
@@ -44,8 +39,8 @@ describe('POST users', () => {
     const usersAtStart = await getUsers()
 
     const newUser = {
-      username: 'testUsername',
-      name: 'newname',
+      username: usersAtStart[0].username,
+      name: usersAtStart[0].name,
       password: 'passwordUsername'
     }
 
