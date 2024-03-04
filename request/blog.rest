@@ -1,17 +1,21 @@
 ### GET ALL PERSONS
 GET http://localhost:3001/api/blogs
 
-### POST request
-POST  http://localhost:3001/api/blogs
+### POST request con token de Lucia
+POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTM3ZTBmY2JmZmZiZjBkYzQ2ZThhZCIsInVzZXJuYW1lIjoiR2FsaWFuYSIsImlhdCI6MTcwOTUzODE0MH0.WjLQ93-wMDVkOAYDXOu_ZDoa_fOegVv9LdmJUrrf28M
 
 {
-	"title": "Title of blog 2",
-    "author": "Fernando Alonso",
-    "url": "url_of_blog2",
-    "likes": 4,
-    "userId": "65e37e1bcbfffbf0dc46e8b1"
+	"title": "Blog with middleare userExtractor 2",
+    "author": "Midudev",
+    "url": "url_of_blog4",
+    "likes": 5
 }
+
+### DELETE
+DELETE http://localhost:3001/api/blogs/65e3843be9a66208beac6847
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTM3ZTBmY2JmZmZiZjBkYzQ2ZThhZCIsInVzZXJuYW1lIjoiR2FsaWFuYSIsImlhdCI6MTcwOTUzODE0MH0.WjLQ93-wMDVkOAYDXOu_ZDoa_fOegVv9LdmJUrrf28M
 
 ### POST request
 PUT  http://localhost:3001/api/blogs/dasfgcdasfc
