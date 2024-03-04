@@ -51,8 +51,17 @@ blogRouter.post('/', userExtractor, async (request, response, next) => {
 
 blogRouter.delete('/:id', userExtractor, async (request, response, next) => {
   const { id } = request.params
+  const { userId } = request
 
   try {
+    const blog = await Blog.findById(id)
+
+    if (blog.user.toString() !== userId.toString()) {
+      return response.status(401).json({
+        error: 'Blog deletion is only allowed for the user who added it.'
+      })
+    }
+
     await Blog.findByIdAndDelete(id)
     response.status(204).end()
   } catch (error) { next(error) }
