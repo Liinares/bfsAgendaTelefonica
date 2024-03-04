@@ -18,7 +18,6 @@ const ERROR_HANDLERS = {
 const handleErrors = (error, request, response, next) => {
   console.log('HANDLE ERRORS')
   console.log(error.name)
-  console.error(error)
 
   const handler = ERROR_HANDLERS[error.name] || ERROR_HANDLERS.defaultError
 
